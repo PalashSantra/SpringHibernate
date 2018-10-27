@@ -2,6 +2,7 @@ package com.palash.SpringHibernate.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -27,14 +28,15 @@ public class StudentManagementController {
 		ModelAndView mv = new ModelAndView();
 		return mv;
 	}
-	@RequestMapping("/dept_insert")
+	@RequestMapping("/department")
 	public ModelAndView addDept() {
 		ModelAndView mv = new ModelAndView("dept_info");
 		return mv;
 	}
-	@RequestMapping("/save_dept")
-	public ModelAndView saveDept() {
-		ModelAndView mv = new ModelAndView();
+	@RequestMapping("/department/save")
+	public ModelAndView saveDept(@RequestParam("dept_name") String dept_name) {
+		ModelAndView mv = new ModelAndView("dept_info");
+		mv.addObject("dept_name", dept_name);
 		return mv;
 	}
 	@RequestMapping("/show_dept")

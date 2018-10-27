@@ -1,20 +1,90 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="ISO-8859-1">
-		<title>Insert title here</title>
-		<link rel="stylesheet" href="http://localhost:8080/SpringHibernate/webjars/bootstrap/3.3.7/css/bootstrap.min.css">
-		<!-- Latest compiled and minified CSS -->
-		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
-	</head>
-	<body>
-		<button type="button" class="btn btn-primary">Primary</button>
-		<script type="text/javascript" src="http://localhost:8080/SpringHibernate/webjars/jquery/3.2.1/jquery.min.js"></script>
-		<script type="text/javascript" src="http://localhost:8080/SpringHibernate/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
-		<!-- <script type="text/javascript" src="/SpringHibernate/webjars/jquery/3.2.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/SpringHibernate/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-	</body>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./webjars/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+  </style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>                        
+	      </button>
+	      <a class="navbar-brand" href="#">Portfolio</a>
+	    </div>
+	    <div class="collapse navbar-collapse" id="myNavbar">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Home</a></li>
+	        <li><a href="#">Student</a></li>
+	        <li><a href="#">Department</a></li>
+	        <li><a href="#">Laptop</a></li>
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+	
+	<div class="jumbotron">
+	  <div class="container text-center">
+		<div class="row">
+			<form class="form-horizontal" method="post" action="./department">
+			  <div class="form-group">
+			    <label class="control-label col-sm-2" for="dept_name">Department Name:</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" name="dept_name" id="dept_name" placeholder="Enter Department Name">
+			    </div>
+			  </div>
+			  <div class="form-group"> 
+			    <div class="col-sm-offset-2 col-sm-10 col-md-8">
+			      <button type="submit" class="btn btn-primary">Submit</button>
+			    </div>
+			  </div>
+			</form>
+		</div>
+		<div class="row">
+		<%
+			;
+		%>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Action</th>
+						<th>Sl. No.</th>
+						<th>Department ID</th>
+						<th>Department Name</th>
+					</tr>
+				</thead>
+				<tbody>
+				
+				</tbody>
+			</table>
+		</div>
+	  </div>
+	</div>
+	<script type="text/javascript" src="./webjars/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="./webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
 </html>
