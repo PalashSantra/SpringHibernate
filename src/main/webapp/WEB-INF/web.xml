@@ -7,9 +7,15 @@
   <servlet>
   	<servlet-name>dispatcher</servlet-name>
   	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
 	  <servlet-name>dispatcher</servlet-name>
 	  <url-pattern>/</url-pattern>
   </servlet-mapping>
+  <context-param>
+  	<param-name>base_url</param-name>
+  	<param-value>http://localhost:8080/SpringHibernate</param-value>
+  </context-param>
 </web-app>
+

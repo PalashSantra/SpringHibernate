@@ -40,4 +40,51 @@ public class StudentManageService {
 			e.printStackTrace();
 		}
 	}
+	@SuppressWarnings("unchecked")
+	public List<Department> getAllDepartments(){
+		String HQL= "from Department";
+		List<Department> depts = new ArrayList<Department>();
+		Transaction tx=null;
+		try {
+			tx = session.beginTransaction();
+			Query q=session.createQuery(HQL);
+			q.setCacheable(true);
+			depts= q.list();
+			tx.commit();
+		}
+		catch(Exception e) {
+			if (tx!=null) 
+				tx.rollback();
+			e.printStackTrace();
+		}
+		return depts;
+	}
+	public Department getDepartment(int DNo) {
+		Department dept=null;
+		Transaction tx=null;
+		try {
+			tx = session.beginTransaction();
+			dept=(Department)session.get(Department.class, DNo);
+			tx.commit();
+		}
+		catch(Exception e) {
+			if (tx!=null) 
+				tx.rollback();
+			e.printStackTrace();
+		}
+		return dept;
+	}
+	public void deleteDepatment(Department dept) {
+		Transaction tx=null;
+		try {
+			tx = session.beginTransaction();
+			session.delete(dept);
+			tx.commit();
+		}
+		catch(Exception e) {
+			if (tx!=null) 
+				tx.rollback();
+			e.printStackTrace();
+		}
+	}
 }

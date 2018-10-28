@@ -1,13 +1,21 @@
 package com.palash.SpringHibernate.controller;
 
+import java.util.List;
+
+import javax.servlet.ServletContext;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-public class StudentManagementController {
+import com.palash.SpringHibernate.model.Department;
+import com.palash.SpringHibernate.service.StudentManageService;
 
+@Controller
+public class StudentManagementController implements ServletContextAware {
+	private ServletContext servletContext;
 	@RequestMapping("/student_insert")
 	public ModelAndView addStudent() {
 		ModelAndView mv = new ModelAndView();
@@ -30,13 +38,40 @@ public class StudentManagementController {
 	}
 	@RequestMapping("/department")
 	public ModelAndView addDept() {
+		String base_url=this.servletContext.getInitParameter("base_url");
+		StudentManageService sm_service = new StudentManageService();
+		List<Department> depts = sm_service.getAllDepartments(); 
 		ModelAndView mv = new ModelAndView("dept_info");
+		mv.addObject("base_url", base_url);
+		mv.addObject("depts", depts);
 		return mv;
 	}
-	@RequestMapping("/department/save")
-	public ModelAndView saveDept(@RequestParam("dept_name") String dept_name) {
-		ModelAndView mv = new ModelAndView("dept_info");
-		mv.addObject("dept_name", dept_name);
+	@RequestMapping("/department/service")
+	public ModelAndView saveDept(@RequestParam("dept_name") String dept_name,@RequestParam("dept_no") int dept_no,@RequestParam("mode") String mode) {
+		String base_url=this.servletContext.getInitParameter("base_url");
+		StudentManageService sm_service = new StudentManageService();
+		if(mode.equals("save")){
+			Department dept = new Department();
+			dept.setDName(dept_name);
+			sm_service.addDepartment(dept);
+		}
+		else {
+			Department dept = sm_service.getDepartment(dept_no);
+			dept.setDName(dept_name);
+		}
+		List<Department> depts = sm_service.getAllDepartments(); 
+		ModelAndView mv = new ModelAndView("redirect:"+base_url+"/department");
+		//mv.addObject("base_url", base_url);
+		//mv.addObject("depts", depts);
+		return mv;
+	}
+	@RequestMapping("/department/delete")
+	public ModelAndView deleteDept(@RequestParam("dept_no") int dept_no) {
+		String base_url=this.servletContext.getInitParameter("base_url");
+		StudentManageService sm_service = new StudentManageService();
+		Department dept = sm_service.getDepartment(dept_no);
+		sm_service.deleteDepatment(dept);
+		ModelAndView mv = new ModelAndView("redirect:"+base_url+"/department");
 		return mv;
 	}
 	@RequestMapping("/show_dept")
@@ -68,5 +103,10 @@ public class StudentManagementController {
 	public ModelAndView delLap() {
 		ModelAndView mv = new ModelAndView();
 		return mv;
+	}
+	@Override
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+		
 	}
 }

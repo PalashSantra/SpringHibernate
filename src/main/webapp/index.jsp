@@ -36,7 +36,7 @@
 	      <ul class="nav navbar-nav">
 	        <li class="active"><a href="#">Home</a></li>
 	        <li><a href="#">Student</a></li>
-	        <li><a href="/department">Department</a></li>
+	        <li><a href="./department">Department</a></li>
 	        <li><a href="#">Laptop</a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
