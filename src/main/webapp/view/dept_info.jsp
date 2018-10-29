@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" isELIgnored="false"%>
     <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +51,8 @@
 	<div class="jumbotron">
 	  <div class="container text-center">
 		<div class="row">
-			<form class="form-horizontal" method="post" action="${base_url}/department/service">
+			
+			<form:form cssClass="form-horizontal" method="post" action="${base_url}/department/service" modelAttribute="Department">
 				<input type="hidden" name="dept_no" id="dept_no" value="0">
 				<input type="hidden" name="mode" id="mode" value="save">
 			  <div class="form-group">
@@ -65,7 +67,7 @@
 			      <button type="submit" class="btn btn-primary btn_submit">Save</button>
 			    </div>
 			  </div>
-			</form>
+			</form:form>
 		</div>
 		<div class="row">
 			<table class="table table-striped" style="text-align:center">
