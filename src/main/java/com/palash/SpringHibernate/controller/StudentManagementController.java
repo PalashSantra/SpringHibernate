@@ -11,6 +11,7 @@ import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.palash.SpringHibernate.model.Department;
+import com.palash.SpringHibernate.model.Laptop;
 import com.palash.SpringHibernate.service.StudentManageService;
 
 @Controller
@@ -74,19 +75,14 @@ public class StudentManagementController implements ServletContextAware {
 		ModelAndView mv = new ModelAndView("redirect:"+base_url+"/department");
 		return mv;
 	}
-	@RequestMapping("/show_dept")
-	public ModelAndView listDept() {
-		ModelAndView mv = new ModelAndView();
-		return mv;
-	}
-	@RequestMapping("/remove_dept")
-	public ModelAndView delDept() {
-		ModelAndView mv = new ModelAndView();
-		return mv;
-	}
-	@RequestMapping("/lap_insert")
+	@RequestMapping("/laptop")
 	public ModelAndView addLap() {
-		ModelAndView mv = new ModelAndView();
+		String base_url=this.servletContext.getInitParameter("base_url");
+		StudentManageService sm_service = new StudentManageService();
+		List<Laptop> laps = sm_service.getAllLaptops(); 
+		ModelAndView mv = new ModelAndView("lap_info");
+		mv.addObject("base_url", base_url);
+		mv.addObject("laps", laps);
 		return mv;
 	}
 	@RequestMapping("/save_lap")

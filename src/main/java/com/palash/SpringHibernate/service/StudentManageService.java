@@ -87,4 +87,23 @@ public class StudentManageService {
 			e.printStackTrace();
 		}
 	}
+	@SuppressWarnings("unchecked")
+	public List<Laptop> getAllLaptops(){
+		String HQL= "from Laptop";
+		List<Laptop> laps = new ArrayList<Laptop>();
+		Transaction tx=null;
+		try {
+			tx = session.beginTransaction();
+			Query q=session.createQuery(HQL);
+			q.setCacheable(true);
+			laps= q.list();
+			tx.commit();
+		}
+		catch(Exception e) {
+			if (tx!=null) 
+				tx.rollback();
+			e.printStackTrace();
+		}
+		return laps;
+	}
 }
