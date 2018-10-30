@@ -17,6 +17,12 @@ import com.palash.SpringHibernate.service.StudentManageService;
 @Controller
 public class StudentManagementController implements ServletContextAware {
 	private ServletContext servletContext;
+	private StudentManageService sm_service;
+	
+	public StudentManagementController() {
+		super();
+		sm_service = new StudentManageService();
+	}
 	@RequestMapping("/student_insert")
 	public ModelAndView addStudent() {
 		ModelAndView mv = new ModelAndView();
@@ -40,7 +46,6 @@ public class StudentManagementController implements ServletContextAware {
 	@RequestMapping("/department")
 	public ModelAndView addDept() {
 		String base_url=this.servletContext.getInitParameter("base_url");
-		StudentManageService sm_service = new StudentManageService();
 		List<Department> depts = sm_service.getAllDepartments(); 
 		ModelAndView mv = new ModelAndView("dept_info");
 		mv.addObject("base_url", base_url);
@@ -50,7 +55,6 @@ public class StudentManagementController implements ServletContextAware {
 	@RequestMapping("/department/service")
 	public ModelAndView saveDept(@RequestParam("dept_name") String dept_name,@RequestParam("dept_no") int dept_no,@RequestParam("mode") String mode) {
 		String base_url=this.servletContext.getInitParameter("base_url");
-		StudentManageService sm_service = new StudentManageService();
 		if(mode.equals("save")){
 			Department dept = new Department();
 			dept.setDName(dept_name);
@@ -69,7 +73,6 @@ public class StudentManagementController implements ServletContextAware {
 	@RequestMapping("/department/delete")
 	public ModelAndView deleteDept(@RequestParam("dept_no") int dept_no) {
 		String base_url=this.servletContext.getInitParameter("base_url");
-		StudentManageService sm_service = new StudentManageService();
 		Department dept = sm_service.getDepartment(dept_no);
 		sm_service.deleteDepatment(dept);
 		ModelAndView mv = new ModelAndView("redirect:"+base_url+"/department");
@@ -78,7 +81,6 @@ public class StudentManagementController implements ServletContextAware {
 	@RequestMapping("/laptop")
 	public ModelAndView addLap() {
 		String base_url=this.servletContext.getInitParameter("base_url");
-		StudentManageService sm_service = new StudentManageService();
 		List<Laptop> laps = sm_service.getAllLaptops(); 
 		ModelAndView mv = new ModelAndView("lap_info");
 		mv.addObject("base_url", base_url);

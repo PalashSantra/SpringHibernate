@@ -23,7 +23,7 @@
 </head>
 <body>
 	<nav class="navbar navbar-inverse">
-	  <%@include file="../view/header.jsp" %>
+	  <%@include file="/view/header.jsp" %>
 	</nav>
 	
 	<div class="jumbotron">
