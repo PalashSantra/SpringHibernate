@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.ServletContextAware;
@@ -16,6 +18,7 @@ import com.palash.SpringHibernate.service.StudentManageService;
 
 @Controller
 public class StudentManagementController implements ServletContextAware {
+	@Autowired
 	private ServletContext servletContext;
 	private StudentManageService sm_service;
 	
@@ -78,8 +81,23 @@ public class StudentManagementController implements ServletContextAware {
 		ModelAndView mv = new ModelAndView("redirect:"+base_url+"/department");
 		return mv;
 	}
-	@RequestMapping("/laptop")
-	public ModelAndView addLap() {
+	@RequestMapping("/laptop/add")
+	public ModelAndView addLap(@ModelAttribute("laptop") Laptop laptop) {
+		String base_url=this.servletContext.getInitParameter("base_url");
+		 
+		ModelAndView mv = new ModelAndView("add_laptop");
+		mv.addObject("base_url", base_url);
+		
+		return mv;
+	}
+	@RequestMapping("/laptop/save")
+	public String saveLap(@ModelAttribute("laptop") Laptop laptop) {
+		StudentManageService sm = new StudentManageService();
+		sm.addLaptop(laptop);
+		return "redirect:/laptop/show";
+	}
+	@RequestMapping("/laptop/show")
+	public ModelAndView listLap() {
 		String base_url=this.servletContext.getInitParameter("base_url");
 		List<Laptop> laps = sm_service.getAllLaptops(); 
 		ModelAndView mv = new ModelAndView("lap_info");
@@ -87,24 +105,15 @@ public class StudentManagementController implements ServletContextAware {
 		mv.addObject("laps", laps);
 		return mv;
 	}
-	@RequestMapping("/save_lap")
-	public ModelAndView saveLap() {
-		ModelAndView mv = new ModelAndView();
-		return mv;
-	}
-	@RequestMapping("/show_lap")
-	public ModelAndView listLap() {
-		ModelAndView mv = new ModelAndView();
-		return mv;
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+		
 	}
 	@RequestMapping("/remove_lap")
 	public ModelAndView delLap() {
 		ModelAndView mv = new ModelAndView();
 		return mv;
 	}
-	@Override
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-		
-	}
+
+
 }

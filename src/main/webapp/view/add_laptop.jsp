@@ -54,37 +54,20 @@
 			
 		</div>
 		<div class="row">
-			<table class="table table-striped" style="text-align:center">
-				<thead>
-					<tr>
-						<th class="text-center">Action</th>
-						<th class="text-center">Sl. No.</th>
-						<th class="text-center">Laptop ID</th>
-						<th class="text-center">Laptop Name</th>
-						<th class="text-center">Laptop Price</th>
-					</tr>
-				</thead>
-				<tbody>
-					<% int sl_no=0; %>
-					<c:forEach items="${laps}" var="lap">
-						<% sl_no+=1; %>
-						<tr>
-							<td>
-								<a href="<c:url value="${base_url}/laptop/edit/${lap.getLId()}"/>">
-									<button class="btn btn-info edit">Edit</button>
-								</a>
-								<a href="<c:url value="${base_url}/laptop/delete/${lap.getLId()}"/>">
-									<button class="btn btn-danger delete">Delete</button>
-								</a>
-							</td>
-							<td><%=sl_no %></td>
-							<td class="lap_id">${lap.getLId()}</td>
-							<td class="lap_name">${lap.getName()}</td>
-							<td class="lap_price">${lap.getPrice()}</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+			<form:form id="laptopInsert" method="POST" action="${base_url}/laptop/save" modelAttribute="laptop">
+				<div class="form-group col-md-3" id="">
+					<form:label path="Name">Name</form:label>
+					<form:input path="Name" class="form-control" placeholder="Enter ..."/>
+				</div>
+				<div class="form-group col-md-3" id="">
+					<form:label path="Price">Price</form:label>
+					<form:input path="Price" class="form-control" placeholder="Enter ..."/>
+				</div>
+				<div class="col-md-3">
+					<br>
+					<form:button id="save" name="save" class="btn btn-primary btn_submit col-md-3">Save</form:button>
+				</div>
+			</form:form>
 		</div>
 	  </div>
 	</div>
