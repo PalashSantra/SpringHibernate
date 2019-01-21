@@ -106,4 +106,17 @@ public class StudentManageService {
 		}
 		return laps;
 	}
+	public void addLaptop(Laptop laptop) {
+		Transaction tx=null;
+		try {
+			tx = session.beginTransaction();
+			session.save(laptop);
+			tx.commit();
+		}
+		catch(Exception e) {
+			if (tx!=null) 
+				tx.rollback();
+			e.printStackTrace();
+		}
+	}
 }

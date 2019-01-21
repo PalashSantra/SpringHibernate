@@ -16,4 +16,9 @@ public class LoginController {
 		ModelAndView mv = new ModelAndView("login_page");
 		return mv;
 	}
+	@RequestMapping("/")
+	public ModelAndView home() {
+		ModelAndView mv = new ModelAndView("index");
+		return mv;
+	}
 }
