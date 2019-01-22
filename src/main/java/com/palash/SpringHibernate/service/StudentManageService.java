@@ -119,4 +119,32 @@ public class StudentManageService {
 			e.printStackTrace();
 		}
 	}
+	public Laptop getLaptop(int LId) {
+		Laptop laptop=null;
+		Transaction tx=null;
+		try {
+			tx = session.beginTransaction();
+			laptop=(Laptop)session.get(Laptop.class, LId);
+			tx.commit();
+		}
+		catch(Exception e) {
+			if (tx!=null) 
+				tx.rollback();
+			e.printStackTrace();
+		}
+		return laptop;
+	}
+	public void deleteLaptop(Laptop laptop) {
+		Transaction tx=null;
+		try {
+			tx = session.beginTransaction();
+			session.delete(laptop);
+			tx.commit();
+		}
+		catch(Exception e) {
+			if (tx!=null)
+				tx.rollback();
+			e.printStackTrace();
+		}
+	}
 }

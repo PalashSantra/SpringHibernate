@@ -51,6 +51,14 @@
 	<div class="jumbotron">
 	  <div class="container text-center">
 		<div class="row">
+			<c:set var="msg" value="${msg}" />
+			<c:set var="msg_type" value="${msg_type}" />
+			<c:if test="${msg!=null}">
+				<div class="alert alert-${msg_type} alert-dismissible" data-auto-dismiss role="alert">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  					<strong>Success!</strong> ${msg}
+				</div>
+			</c:if>
 			
 		</div>
 		<div class="row">
@@ -92,33 +100,8 @@
 	<script type="text/javascript" src="${base_url}/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(function(){
-			$(".edit").click(function(){
-				var dno = $(this).parent().parent().find(".dno").html();
-				var dname = $(this).parent().parent().find(".dname").html();
-				$("#dept_no").val(dno);
-				$("#dept_name").val(dname);
-				$("#mode").val("update");
-				$(".btn_submit").text("Update");
-			});
-			$(".delete").click(function(){
-				var dno = $(this).parent().parent().find(".dno").html();
-				$.ajax({
-				      type: 'POST',
-				      url: "${base_url}/department/delete",
-				      data: {
-				    	  dept_no:dno
-				      },
-				      dataType: "text",
-				      success: function(resultData) { 
-				    	  window.location.replace("${base_url}/department"); 
-				    	}
-				});
-			});
-			$(".btn_reset").click(function(){
-				$("#dept_no").val("0");
-				$("#dept_name").val("");
-				$("#mode").val("save");
-				$(".btn_submit").text("Save");
+			$(".alert").fadeTo(1000, 500).slideUp(500, function(){
+			    $(".alert").alert('close');
 			});
 		});
 	</script>

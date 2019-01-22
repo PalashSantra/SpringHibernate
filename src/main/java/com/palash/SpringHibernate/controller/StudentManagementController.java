@@ -7,10 +7,13 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.palash.SpringHibernate.model.Department;
 import com.palash.SpringHibernate.model.Laptop;
@@ -25,26 +28,6 @@ public class StudentManagementController implements ServletContextAware {
 	public StudentManagementController() {
 		super();
 		sm_service = new StudentManageService();
-	}
-	@RequestMapping("/student_insert")
-	public ModelAndView addStudent() {
-		ModelAndView mv = new ModelAndView();
-		return mv;
-	}
-	@RequestMapping("/save_student")
-	public ModelAndView saveStudent() {
-		ModelAndView mv = new ModelAndView("login_page");
-		return mv;
-	}
-	@RequestMapping("/show_student")
-	public ModelAndView listStudent() {
-		ModelAndView mv = new ModelAndView();
-		return mv;
-	}
-	@RequestMapping("/remove_student")
-	public ModelAndView delStudent() {
-		ModelAndView mv = new ModelAndView();
-		return mv;
 	}
 	@RequestMapping("/department")
 	public ModelAndView addDept() {
@@ -84,19 +67,19 @@ public class StudentManagementController implements ServletContextAware {
 	@RequestMapping("/laptop/add")
 	public ModelAndView addLap(@ModelAttribute("laptop") Laptop laptop) {
 		String base_url=this.servletContext.getInitParameter("base_url");
-		 
 		ModelAndView mv = new ModelAndView("add_laptop");
 		mv.addObject("base_url", base_url);
-		
 		return mv;
 	}
-	@RequestMapping("/laptop/save")
-	public String saveLap(@ModelAttribute("laptop") Laptop laptop) {
+	@RequestMapping(value="/laptop/save", method=RequestMethod.POST)
+	public String  saveLap(@ModelAttribute("laptop") Laptop laptop,RedirectAttributes redirectAttrs) {
 		StudentManageService sm = new StudentManageService();
 		sm.addLaptop(laptop);
+		redirectAttrs.addFlashAttribute("msg", "Your data has been successfully saved.");
+		redirectAttrs.addFlashAttribute("msg_type", "success");
 		return "redirect:/laptop/show";
 	}
-	@RequestMapping("/laptop/show")
+	@RequestMapping(value="/laptop/show")
 	public ModelAndView listLap() {
 		String base_url=this.servletContext.getInitParameter("base_url");
 		List<Laptop> laps = sm_service.getAllLaptops(); 
@@ -104,16 +87,20 @@ public class StudentManagementController implements ServletContextAware {
 		mv.addObject("base_url", base_url);
 		mv.addObject("laps", laps);
 		return mv;
+	}	
+	@RequestMapping("/laptop/delete/{id}")
+	public String  delLap(@PathVariable("id") int id,RedirectAttributes redirectAttrs) {
+		Laptop laptop=sm_service.getLaptop(id);
+		sm_service.deleteLaptop(laptop);
+		redirectAttrs.addFlashAttribute("msg", "Your data has been successfully removed.");
+		redirectAttrs.addFlashAttribute("msg_type", "danger");
+		return "redirect:/laptop/show";
 	}
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 		
 	}
-	@RequestMapping("/remove_lap")
-	public ModelAndView delLap() {
-		ModelAndView mv = new ModelAndView();
-		return mv;
-	}
+	
 
 
 }
