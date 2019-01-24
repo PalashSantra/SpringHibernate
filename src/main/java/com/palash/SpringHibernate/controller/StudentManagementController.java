@@ -69,6 +69,7 @@ public class StudentManagementController implements ServletContextAware {
 		String base_url=this.servletContext.getInitParameter("base_url");
 		ModelAndView mv = new ModelAndView("add_laptop");
 		mv.addObject("base_url", base_url);
+		mv.addObject("mode","save");
 		return mv;
 	}
 	@RequestMapping(value="/laptop/save", method=RequestMethod.POST)
@@ -94,6 +95,24 @@ public class StudentManagementController implements ServletContextAware {
 		sm_service.deleteLaptop(laptop);
 		redirectAttrs.addFlashAttribute("msg", "Your data has been successfully removed.");
 		redirectAttrs.addFlashAttribute("msg_type", "danger");
+		return "redirect:/laptop/show";
+	}
+	@RequestMapping("/laptop/edit/{id}")
+	public ModelAndView editLap(@PathVariable("id") int id) {
+		String base_url=this.servletContext.getInitParameter("base_url");
+		Laptop laptop=sm_service.getLaptop(id);
+		ModelAndView mv = new ModelAndView("add_laptop","laptop",laptop);
+		mv.addObject("base_url", base_url);
+		mv.addObject("mode","update");
+		return mv;
+	}
+	@RequestMapping(value="/laptop/update", method=RequestMethod.POST)
+	public String  updateLap(@ModelAttribute("laptop") Laptop laptop,RedirectAttributes redirectAttrs) {
+		Laptop my_laptop=sm_service.getLaptop(laptop.getLId());
+		my_laptop.setName(laptop.getName());
+		my_laptop.setPrice(laptop.getPrice());
+		redirectAttrs.addFlashAttribute("msg", "Your data has been successfully updated.");
+		redirectAttrs.addFlashAttribute("msg_type", "success");
 		return "redirect:/laptop/show";
 	}
 	public void setServletContext(ServletContext servletContext) {

@@ -6,6 +6,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class LoginController {
+	@RequestMapping("/register")
+	public ModelAndView registerUser() {
+		ModelAndView mv = new ModelAndView("login_page");
+		return mv;
+	}
 	@RequestMapping("/login")
 	public ModelAndView login() {
 		ModelAndView mv = new ModelAndView("login_page");

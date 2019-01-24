@@ -54,7 +54,10 @@
 			
 		</div>
 		<div class="row">
-			<form:form id="laptopInsert" method="POST" action="${base_url}/laptop/save" modelAttribute="laptop">
+			<form:form id="laptopInsert" method="POST" action="${base_url}/laptop/${mode}" modelAttribute="laptop">
+				<c:if test="${mode=='update'}">
+					<form:input path="LId" class="form-control hidden" placeholder="Enter ..."/>
+				</c:if>
 				<div class="form-group col-md-3" id="">
 					<form:label path="Name">Name</form:label>
 					<form:input path="Name" class="form-control" placeholder="Enter ..."/>
