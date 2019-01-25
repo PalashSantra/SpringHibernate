@@ -30,7 +30,6 @@
 	    <artifactId>spring-security-core</artifactId>
 	    <version>4.1.5.RELEASE</version>
 	</dependency>
-	    <!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
 	<dependency>
 	    <groupId>javax.servlet</groupId>
 	    <artifactId>jstl</artifactId>

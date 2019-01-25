@@ -10,8 +10,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.palash.SpringHibernate.model.User;
 
@@ -19,13 +17,14 @@ public class UserManageService {
 	private Configuration con;
 	private ServiceRegistry reg;
 	private SessionFactory sf;
-	Session session;
-	@Autowired PasswordEncoder passwordEncoder;
+	private Session session; 
+	private com.palash.SpringHibernate.util.PasswordEncoder passwordEncoder;
 	public UserManageService() {
 		con = new Configuration().configure().addAnnotatedClass(User.class);
 		reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry();
 		sf = con.buildSessionFactory(reg);
 		session = sf.openSession();
+		passwordEncoder = new com.palash.SpringHibernate.util.PasswordEncoder();
 	}
 	public void registerUser(User user) {
 		String encryptedPassword = this.passwordEncoder.encode(user.getPassword());
