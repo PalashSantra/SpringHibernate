@@ -1,3 +1,4 @@
+<%@page import="com.palash.SpringHibernate.util.EncryptionUtil"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" isELIgnored="false"%>
     <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
@@ -74,11 +75,12 @@
 				</thead>
 				<tbody>
 					<% int sl_no=0; %>
+					<jsp:useBean id="Encryption" scope="page" class="com.palash.SpringHibernate.util.EncryptionUtil"></jsp:useBean>
 					<c:forEach items="${laps}" var="lap">
-						<% sl_no+=1; %>
+						<% sl_no+=1;%>
 						<tr>
 							<td>
-								<a href="<c:url value="${base_url}/laptop/edit/${lap.getLId()}"/>">
+								<a href="<c:url value="${base_url}/laptop/edit/${Encryption.encode(lap.getLId())}"/>">
 									<button class="btn btn-info edit">Edit</button>
 								</a>
 								<a href="<c:url value="${base_url}/laptop/delete/${lap.getLId()}"/>">

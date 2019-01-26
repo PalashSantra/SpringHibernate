@@ -24,3 +24,8 @@ hs_err_pid*
 
 #Target
 /target
+/target/classes/com/palash/SpringHibernate/controller/*
+/target/classes/com/palash/SpringHibernate/model/*
+/target/classes/com/palash/SpringHibernate/service/*
+/target/classes/com/palash/SpringHibernate/util/*
+/.settings/*

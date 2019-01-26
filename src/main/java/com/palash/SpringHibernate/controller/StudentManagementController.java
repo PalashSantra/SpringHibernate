@@ -83,7 +83,7 @@ public class StudentManagementController implements ServletContextAware {
 	@RequestMapping(value="/laptop/show")
 	public ModelAndView listLap() {
 		String base_url=this.servletContext.getInitParameter("base_url");
-		List<Laptop> laps = sm_service.getAllLaptops(); 
+		List<Laptop> laps = sm_service.getAllLaptops();
 		ModelAndView mv = new ModelAndView("lap_info");
 		mv.addObject("base_url", base_url);
 		mv.addObject("laps", laps);

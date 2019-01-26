@@ -9,12 +9,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.sun.istack.internal.NotNull;
+
 @Entity
-@Table(name = "user")
+@Table(
+		name = "user",
+		uniqueConstraints = {
+				@UniqueConstraint(columnNames = "Email"),
+				@UniqueConstraint(columnNames = "UserName")
+		}
+)
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
@@ -22,9 +31,13 @@ public class User {
 	@Column(name = "UserID")
 	@GeneratedValue
 	private int UserID;
+	@NotNull
 	private String FullName;
+	@NotNull
 	private String Email;
+	@NotNull
 	private String UserName;
+	@NotNull
 	private String Password;
 	private boolean IsActive;
 	private String Role;
