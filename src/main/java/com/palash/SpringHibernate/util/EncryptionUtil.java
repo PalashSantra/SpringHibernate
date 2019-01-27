@@ -15,10 +15,10 @@ public class EncryptionUtil {
 	// some random salt
 	private static final byte[] SALT = { (byte) 0x21, (byte) 0x21, (byte) 0xF0, (byte) 0x55, (byte) 0xC3, (byte) 0x9F,
 			(byte) 0x5A, (byte) 0x75 };
-
-	private final static int ITERATION_COUNT = 31;
-
-	private EncryptionUtil() {
+	private static final int ITERATION_COUNT = 31;
+	
+	public EncryptionUtil() {
+		
 	}
 
 	public static String encode(String input) {

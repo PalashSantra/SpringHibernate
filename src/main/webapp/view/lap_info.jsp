@@ -83,7 +83,7 @@
 								<a href="<c:url value="${base_url}/laptop/edit/${Encryption.encode(lap.getLId())}"/>">
 									<button class="btn btn-info edit">Edit</button>
 								</a>
-								<a href="<c:url value="${base_url}/laptop/delete/${lap.getLId()}"/>">
+								<a href="<c:url value="${base_url}/laptop/delete/${Encryption.encode(lap.getLId())}"/>">
 									<button class="btn btn-danger delete">Delete</button>
 								</a>
 							</td>

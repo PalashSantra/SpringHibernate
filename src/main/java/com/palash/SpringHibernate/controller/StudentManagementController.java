@@ -18,12 +18,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.palash.SpringHibernate.model.Department;
 import com.palash.SpringHibernate.model.Laptop;
 import com.palash.SpringHibernate.service.StudentManageService;
+import com.palash.SpringHibernate.util.EncryptionUtil;
 
 @Controller
 public class StudentManagementController implements ServletContextAware {
 	@Autowired
 	private ServletContext servletContext;
 	private StudentManageService sm_service;
+	private EncryptionUtil encryption;
 	
 	public StudentManagementController() {
 		super();
@@ -89,17 +91,19 @@ public class StudentManagementController implements ServletContextAware {
 		mv.addObject("laps", laps);
 		return mv;
 	}	
-	@RequestMapping("/laptop/delete/{id}")
-	public String  delLap(@PathVariable("id") int id,RedirectAttributes redirectAttrs) {
+	@RequestMapping("/laptop/delete/{token}")
+	public String  delLap(@PathVariable("token") String token,RedirectAttributes redirectAttrs) {
+		int id= Integer.parseInt(encryption.decode(token));
 		Laptop laptop=sm_service.getLaptop(id);
 		sm_service.deleteLaptop(laptop);
 		redirectAttrs.addFlashAttribute("msg", "Your data has been successfully removed.");
 		redirectAttrs.addFlashAttribute("msg_type", "danger");
 		return "redirect:/laptop/show";
 	}
-	@RequestMapping("/laptop/edit/{id}")
-	public ModelAndView editLap(@PathVariable("id") int id) {
+	@RequestMapping("/laptop/edit/{token}")
+	public ModelAndView editLap(@PathVariable("token") String token) {
 		String base_url=this.servletContext.getInitParameter("base_url");
+		int id= Integer.parseInt(encryption.decode(token));
 		Laptop laptop=sm_service.getLaptop(id);
 		ModelAndView mv = new ModelAndView("add_laptop","laptop",laptop);
 		mv.addObject("base_url", base_url);
