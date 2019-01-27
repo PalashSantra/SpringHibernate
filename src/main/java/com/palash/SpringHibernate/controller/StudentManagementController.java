@@ -3,6 +3,7 @@ package com.palash.SpringHibernate.controller;
 import java.util.List;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,6 @@ public class StudentManagementController implements ServletContextAware {
 	@Autowired
 	private ServletContext servletContext;
 	private StudentManageService sm_service;
-	private EncryptionUtil encryption;
 	
 	public StudentManagementController() {
 		super();
@@ -52,7 +52,6 @@ public class StudentManagementController implements ServletContextAware {
 			Department dept = sm_service.getDepartment(dept_no);
 			dept.setDName(dept_name);
 		}
-		List<Department> depts = sm_service.getAllDepartments(); 
 		ModelAndView mv = new ModelAndView("redirect:"+base_url+"/department");
 		//mv.addObject("base_url", base_url);
 		//mv.addObject("depts", depts);
@@ -92,23 +91,37 @@ public class StudentManagementController implements ServletContextAware {
 		return mv;
 	}	
 	@RequestMapping("/laptop/delete/{token}")
-	public String  delLap(@PathVariable("token") String token,RedirectAttributes redirectAttrs) {
-		int id= Integer.parseInt(encryption.decode(token));
-		Laptop laptop=sm_service.getLaptop(id);
-		sm_service.deleteLaptop(laptop);
-		redirectAttrs.addFlashAttribute("msg", "Your data has been successfully removed.");
-		redirectAttrs.addFlashAttribute("msg_type", "danger");
-		return "redirect:/laptop/show";
+	public String  delLap(@PathVariable("token") String token,RedirectAttributes redirectAttrs,HttpServletResponse hr) {
+		try {
+			int id= Integer.parseInt(EncryptionUtil.decode(token));
+			Laptop laptop=sm_service.getLaptop(id);
+			sm_service.deleteLaptop(laptop);
+			redirectAttrs.addFlashAttribute("msg", "Your data has been successfully removed.");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return "redirect:/laptop/show";
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			hr.setStatus(403);
+			return "/laptop/show";
+		}
 	}
 	@RequestMapping("/laptop/edit/{token}")
-	public ModelAndView editLap(@PathVariable("token") String token) {
+	public ModelAndView editLap(@PathVariable("token") String token,HttpServletResponse hr) {
 		String base_url=this.servletContext.getInitParameter("base_url");
-		int id= Integer.parseInt(encryption.decode(token));
-		Laptop laptop=sm_service.getLaptop(id);
-		ModelAndView mv = new ModelAndView("add_laptop","laptop",laptop);
-		mv.addObject("base_url", base_url);
-		mv.addObject("mode","update");
-		return mv;
+		try {
+			int id= Integer.parseInt(EncryptionUtil.decode(token));
+			Laptop laptop=sm_service.getLaptop(id);
+			ModelAndView mv = new ModelAndView("add_laptop","laptop",laptop);
+			mv.addObject("base_url", base_url);
+			mv.addObject("mode","update");
+			return mv;
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			hr.setStatus(403);
+			return new ModelAndView("add_laptop");
+		}
 	}
 	@RequestMapping(value="/laptop/update", method=RequestMethod.POST)
 	public String  updateLap(@ModelAttribute("laptop") Laptop laptop,RedirectAttributes redirectAttrs) {
