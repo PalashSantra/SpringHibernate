@@ -1,9 +1,11 @@
 package com.palash.SpringHibernate.controller;
 
 import javax.servlet.ServletContext;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.palash.SpringHibernate.model.User;
 import com.palash.SpringHibernate.service.UserManageService;
+import com.palash.SpringHibernate.util.UserSession;
 
 @Controller
 public class LoginController implements ServletContextAware {
@@ -31,17 +34,57 @@ public class LoginController implements ServletContextAware {
 		return mv;
 	}
 	@RequestMapping(value="/user/saveUser",method=RequestMethod.POST)
-	public String createUser(@ModelAttribute("user") User user,RedirectAttributes redirectAttrs) {
-		String base_url= this.servletContext.getInitParameter("base_url");
-		user_service.registerUser(user);
+	public ModelAndView createUser(@ModelAttribute("user") @Valid User user,BindingResult result, RedirectAttributes redirectAttrs) {
+		if(result.hasErrors()) {
+			String base_url= this.servletContext.getInitParameter("base_url");
+			ModelAndView mv = new ModelAndView("registration");
+			mv.addObject("base_url",base_url);
+			return mv;
+		}
+		try {
+			if(user_service.IsAvailable(user)) {
+				user_service.registerUser(user);
+			}
+			else {
+				redirectAttrs.addFlashAttribute("msg", "Email ID or UserName is not available");
+				redirectAttrs.addFlashAttribute("msg_type", "danger");
+				return new ModelAndView("redirect:/register");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		redirectAttrs.addFlashAttribute("msg", "Your have been successfully registered");
 		redirectAttrs.addFlashAttribute("msg_type", "success");
-		return "redirect:/login";
+		return new ModelAndView("redirect:/login");
 	}
 	@RequestMapping("/login")
-	public ModelAndView login() {
+	public ModelAndView login(@ModelAttribute("user") User user) {
+		String base_url= this.servletContext.getInitParameter("base_url");
 		ModelAndView mv = new ModelAndView("login_page");
+		mv.addObject("base_url",base_url);
 		return mv;
+	}
+	@RequestMapping("/user/loginUser")
+	public ModelAndView doLogin(@ModelAttribute("user") @Valid User user,BindingResult result, RedirectAttributes redirectAttrs) {
+		if(result.hasFieldErrors("UserName") || result.hasFieldErrors("Password")) {
+			String base_url= this.servletContext.getInitParameter("base_url");
+			ModelAndView mv = new ModelAndView("login_page");
+			mv.addObject("base_url",base_url);
+			return mv;
+		}
+		UserSession us= user_service.Validate(user);
+		if(us.isLogged()) {
+			System.out.println("success");
+			return new ModelAndView("login_page");
+		}
+		else {
+			System.out.println("failed");
+			redirectAttrs.addFlashAttribute("msg", "User Name and Password have not matched");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return new ModelAndView("redirect:/login");
+		}
+
 	}
 	@RequestMapping("/logout")
 	public ModelAndView logout() {

@@ -10,11 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import com.sun.istack.internal.NotNull;
 
 @Entity
 @Table(
@@ -32,12 +33,17 @@ public class User {
 	@GeneratedValue
 	private int UserID;
 	@NotNull
+	@NotEmpty
 	private String FullName;
 	@NotNull
+	@NotEmpty
+	@org.hibernate.validator.constraints.Email
 	private String Email;
 	@NotNull
+	@NotEmpty
 	private String UserName;
 	@NotNull
+	@NotEmpty
 	private String Password;
 	private boolean IsActive;
 	private String Role;

@@ -110,14 +110,14 @@ public class StudentManagementController implements ServletContextAware {
 	public ModelAndView editLap(@PathVariable("token") String token,HttpServletResponse hr) {
 		String base_url=this.servletContext.getInitParameter("base_url");
 		try {
-			int id= Integer.parseInt(EncryptionUtil.decode(token));
+			int id = Integer.parseInt(EncryptionUtil.decode(token));
 			Laptop laptop=sm_service.getLaptop(id);
 			ModelAndView mv = new ModelAndView("add_laptop","laptop",laptop);
+			mv.addObject("laptop",laptop);
 			mv.addObject("base_url", base_url);
 			mv.addObject("mode","update");
 			return mv;
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 			hr.setStatus(403);
 			return new ModelAndView("add_laptop");

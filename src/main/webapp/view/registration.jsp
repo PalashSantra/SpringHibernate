@@ -50,6 +50,17 @@
 	
 	<div class="jumbotron">
 	  <div class="container text-center">
+	  	<div class="row col-md-6 col-md-offset-3">
+			<c:set var="msg" value="${msg}" />
+			<c:set var="msg_type" value="${msg_type}" />
+			<c:if test="${msg!=null}">
+				<div class="alert alert-${msg_type} alert-dismissible" data-auto-dismiss role="alert">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  					<strong>Success!</strong> ${msg}
+				</div>
+			</c:if>
+			
+		</div>
 		<div class="panel panel-primary col-md-6 col-md-offset-3">
 			<div class="panel-heading">User Registration</div>
   			<div class="panel-body">
@@ -68,8 +79,8 @@
 							<form:input path="UserName" class="form-control" placeholder="Enter ..."/>
 						</div>
 						<div class="form-group col-md-12" id="">
-							<form:label path="Password">Password (For Login) <font color='red'><form:errors path='Password' /></font></form:label>
-							<form:input path="Password" class="form-control" placeholder="Enter ..."/>
+							<form:label path="Password" >Password (For Login) <font color='red'><form:errors path='Password' /></font></form:label>
+							<form:password path="Password" class="form-control" placeholder="Enter ..."/>
 						</div>
 	  				</div>
 	  				<div class="row">
