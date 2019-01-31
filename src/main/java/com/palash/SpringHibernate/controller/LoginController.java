@@ -35,28 +35,27 @@ public class LoginController implements ServletContextAware {
 	}
 	@RequestMapping(value="/user/saveUser",method=RequestMethod.POST)
 	public ModelAndView createUser(@ModelAttribute("user") @Valid User user,BindingResult result, RedirectAttributes redirectAttrs) {
-		if(result.hasErrors()) {
-			String base_url= this.servletContext.getInitParameter("base_url");
-			ModelAndView mv = new ModelAndView("registration");
-			mv.addObject("base_url",base_url);
-			return mv;
-		}
-		try {
-			if(user_service.IsAvailable(user)) {
-				user_service.registerUser(user);
+		String base_url= this.servletContext.getInitParameter("base_url");
+		ModelAndView mv = new ModelAndView("registration");
+		mv.addObject("base_url",base_url);
+		if(!result.hasErrors()) {
+			if(!user_service.IsAvailable(user)) {
+				result.rejectValue("Email", "email", "is not available.");
+				result.rejectValue("UserName", "user_name", "is not available.");
+				mv = new ModelAndView("registration");
+				mv.addObject("base_url",base_url);
+				return mv;
 			}
 			else {
-				redirectAttrs.addFlashAttribute("msg", "Email ID or UserName is not available");
-				redirectAttrs.addFlashAttribute("msg_type", "danger");
-				return new ModelAndView("redirect:/register");
+				user_service.registerUser(user);
+				redirectAttrs.addFlashAttribute("msg", "Your have been successfully registered");
+				redirectAttrs.addFlashAttribute("msg_type", "success");
+				return new ModelAndView("redirect:/login");
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		redirectAttrs.addFlashAttribute("msg", "Your have been successfully registered");
-		redirectAttrs.addFlashAttribute("msg_type", "success");
-		return new ModelAndView("redirect:/login");
+		else {
+			return mv;
+		}
 	}
 	@RequestMapping("/login")
 	public ModelAndView login(@ModelAttribute("user") User user) {
