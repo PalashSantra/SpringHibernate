@@ -65,6 +65,7 @@
 			<div class="panel-heading">User Login</div>
   			<div class="panel-body">
   				<form:form id="userLogin" method="POST" action="${base_url}/user/loginUser" modelAttribute="user">
+  					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	  				<div class="row">
 						<div class="form-group col-md-12" id="">
 							<form:label path="UserName">User Name (For Login) <font color='red'><form:errors path='UserName' /></font></form:label>

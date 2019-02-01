@@ -18,6 +18,13 @@
   	<param-value>http://localhost:8080/SpringHibernate</param-value>
   </context-param>
   <error-page>
+  	<error-code>
+  		400
+  		403
+  		500
+  		502
+  		404
+  	</error-code>
   	<location>/errors</location>
   </error-page>
 </web-app>

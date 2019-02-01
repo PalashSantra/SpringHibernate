@@ -170,7 +170,4 @@ public class StudentManagementController implements ServletContextAware {
 		this.servletContext = servletContext;
 		
 	}
-	
-
-
 }
