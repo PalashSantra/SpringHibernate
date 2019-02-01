@@ -1,6 +1,8 @@
 package com.palash.SpringHibernate.controller;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.palash.SpringHibernate.model.User;
 import com.palash.SpringHibernate.service.UserManageService;
+import com.palash.SpringHibernate.util.AuthenticationManager;
 import com.palash.SpringHibernate.util.UserSession;
 
 @Controller
@@ -22,9 +25,11 @@ public class LoginController implements ServletContextAware {
 	@Autowired
 	private ServletContext servletContext;
 	private UserManageService user_service;
+	private AuthenticationManager auth;
 	public LoginController() {
 		super();
 		user_service = new UserManageService();
+		auth= new AuthenticationManager();
 	}
 	@RequestMapping("/register")
 	public ModelAndView registerUser(@ModelAttribute("user") User user) {
@@ -58,14 +63,17 @@ public class LoginController implements ServletContextAware {
 		}
 	}
 	@RequestMapping("/login")
-	public ModelAndView login(@ModelAttribute("user") User user) {
+	public ModelAndView login(@ModelAttribute("user") User user,RedirectAttributes redirectAttrs,HttpSession session) {
 		String base_url= this.servletContext.getInitParameter("base_url");
 		ModelAndView mv = new ModelAndView("login_page");
 		mv.addObject("base_url",base_url);
+		if(auth.isAuthenticated(session, "/login")) {
+			return new ModelAndView("redirect:/homepage");
+		}
 		return mv;
 	}
-	@RequestMapping("/user/loginUser")
-	public ModelAndView doLogin(@ModelAttribute("user") @Valid User user,BindingResult result, RedirectAttributes redirectAttrs) {
+	@RequestMapping(value="/user/loginUser", method=RequestMethod.POST)
+	public ModelAndView doLogin(@ModelAttribute("user") @Valid User user,BindingResult result, RedirectAttributes redirectAttrs,HttpServletRequest request) {
 		if(result.hasFieldErrors("UserName") || result.hasFieldErrors("Password")) {
 			String base_url= this.servletContext.getInitParameter("base_url");
 			ModelAndView mv = new ModelAndView("login_page");
@@ -74,26 +82,35 @@ public class LoginController implements ServletContextAware {
 		}
 		UserSession us= user_service.Validate(user);
 		if(us.isLogged()) {
-			System.out.println("success");
-			return new ModelAndView("login_page");
+			auth.Authenticate(request.getSession(false), us);
+			return new ModelAndView("redirect:/homepage");
 		}
 		else {
-			System.out.println("failed");
 			redirectAttrs.addFlashAttribute("msg", "User Name and Password have not matched");
 			redirectAttrs.addFlashAttribute("msg_type", "danger");
 			return new ModelAndView("redirect:/login");
 		}
-
 	}
 	@RequestMapping("/logout")
-	public ModelAndView logout() {
-		ModelAndView mv = new ModelAndView("login_page");
-		return mv;
+	public String logout(HttpSession session,RedirectAttributes redirectAttrs) {
+		auth.deAuthenticate(session);
+		redirectAttrs.addFlashAttribute("msg", "You have been successfully logged out.");
+		redirectAttrs.addFlashAttribute("msg_type", "success");
+		return "redirect:/login";
 	}
-	@RequestMapping("/")
-	public ModelAndView home() {
+	@RequestMapping("/homepage")
+	public ModelAndView home(HttpSession session,RedirectAttributes redirectAttrs) {
+		String base_url= this.servletContext.getInitParameter("base_url");
 		ModelAndView mv = new ModelAndView("index");
-		return mv;
+		mv.addObject("base_url",base_url);
+		if(auth.isAuthenticated(session, "/homepage")) {
+			return mv;
+		}
+		else {
+			redirectAttrs.addFlashAttribute("msg", "You are not authorized.");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return new ModelAndView("redirect:/login");
+		}
 	}
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.palash.SpringHibernate.model.Department;
 import com.palash.SpringHibernate.model.Laptop;
 import com.palash.SpringHibernate.service.StudentManageService;
+import com.palash.SpringHibernate.util.AuthenticationManager;
 import com.palash.SpringHibernate.util.EncryptionUtil;
 
 @Controller
@@ -26,10 +28,12 @@ public class StudentManagementController implements ServletContextAware {
 	@Autowired
 	private ServletContext servletContext;
 	private StudentManageService sm_service;
+	private AuthenticationManager auth;
 	
 	public StudentManagementController() {
 		super();
 		sm_service = new StudentManageService();
+		auth = new AuthenticationManager();
 	}
 	@RequestMapping("/department")
 	public ModelAndView addDept() {
@@ -66,7 +70,12 @@ public class StudentManagementController implements ServletContextAware {
 		return mv;
 	}
 	@RequestMapping("/laptop/add")
-	public ModelAndView addLap(@ModelAttribute("laptop") Laptop laptop) {
+	public ModelAndView addLap(@ModelAttribute("laptop") Laptop laptop,RedirectAttributes redirectAttrs,HttpSession session) {
+		if(!auth.isAuthenticated(session, "/laptop/add")) {
+			redirectAttrs.addFlashAttribute("msg", "You are not authorized.");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return new ModelAndView("redirect:/login");
+		}
 		String base_url=this.servletContext.getInitParameter("base_url");
 		ModelAndView mv = new ModelAndView("add_laptop");
 		mv.addObject("base_url", base_url);
@@ -74,7 +83,12 @@ public class StudentManagementController implements ServletContextAware {
 		return mv;
 	}
 	@RequestMapping(value="/laptop/save", method=RequestMethod.POST)
-	public String  saveLap(@ModelAttribute("laptop") Laptop laptop,RedirectAttributes redirectAttrs) {
+	public String  saveLap(@ModelAttribute("laptop") Laptop laptop,RedirectAttributes redirectAttrs,HttpSession session) {
+		if(!auth.isAuthenticated(session, "/laptop/show")) {
+			redirectAttrs.addFlashAttribute("msg", "You are not authorized.");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return "redirect:/login";
+		}
 		StudentManageService sm = new StudentManageService();
 		sm.addLaptop(laptop);
 		redirectAttrs.addFlashAttribute("msg", "Your data has been successfully saved.");
@@ -82,7 +96,12 @@ public class StudentManagementController implements ServletContextAware {
 		return "redirect:/laptop/show";
 	}
 	@RequestMapping(value="/laptop/show")
-	public ModelAndView listLap() {
+	public ModelAndView listLap(RedirectAttributes redirectAttrs,HttpSession session) {
+		if(!auth.isAuthenticated(session, "/laptop/show")) {
+			redirectAttrs.addFlashAttribute("msg", "You are not authorized.");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return new ModelAndView("redirect:/login");
+		}
 		String base_url=this.servletContext.getInitParameter("base_url");
 		List<Laptop> laps = sm_service.getAllLaptops();
 		ModelAndView mv = new ModelAndView("lap_info");
@@ -91,7 +110,12 @@ public class StudentManagementController implements ServletContextAware {
 		return mv;
 	}	
 	@RequestMapping("/laptop/delete/{token}")
-	public String  delLap(@PathVariable("token") String token,RedirectAttributes redirectAttrs,HttpServletResponse hr) {
+	public String  delLap(@PathVariable("token") String token,RedirectAttributes redirectAttrs,HttpServletResponse hr,HttpSession session) {
+		if(!auth.isAuthenticated(session, "/laptop/delete/")) {
+			redirectAttrs.addFlashAttribute("msg", "You are not authorized.");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return "redirect:/login";
+		}
 		try {
 			int id= Integer.parseInt(EncryptionUtil.decode(token));
 			Laptop laptop=sm_service.getLaptop(id);
@@ -107,7 +131,12 @@ public class StudentManagementController implements ServletContextAware {
 		}
 	}
 	@RequestMapping("/laptop/edit/{token}")
-	public ModelAndView editLap(@PathVariable("token") String token,HttpServletResponse hr) {
+	public ModelAndView editLap(@PathVariable("token") String token,HttpServletResponse hr,RedirectAttributes redirectAttrs,HttpSession session) {
+		if(!auth.isAuthenticated(session, "/laptop/edit/")) {
+			redirectAttrs.addFlashAttribute("msg", "You are not authorized.");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return new ModelAndView("redirect:/login");
+		}
 		String base_url=this.servletContext.getInitParameter("base_url");
 		try {
 			int id = Integer.parseInt(EncryptionUtil.decode(token));
@@ -124,7 +153,12 @@ public class StudentManagementController implements ServletContextAware {
 		}
 	}
 	@RequestMapping(value="/laptop/update", method=RequestMethod.POST)
-	public String  updateLap(@ModelAttribute("laptop") Laptop laptop,RedirectAttributes redirectAttrs) {
+	public String updateLap(@ModelAttribute("laptop") Laptop laptop,RedirectAttributes redirectAttrs,HttpSession session) {
+		if(!auth.isAuthenticated(session, "/laptop/update")) {
+			redirectAttrs.addFlashAttribute("msg", "You are not authorized.");
+			redirectAttrs.addFlashAttribute("msg_type", "danger");
+			return "redirect:/login";
+		}
 		Laptop my_laptop=sm_service.getLaptop(laptop.getLId());
 		my_laptop.setName(laptop.getName());
 		my_laptop.setPrice(laptop.getPrice());

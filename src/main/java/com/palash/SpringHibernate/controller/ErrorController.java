@@ -34,6 +34,10 @@ public class ErrorController {
                 errorMsg = "Http Error Code: 500. Internal Server Error";
                 break;
             }
+            case 405:{
+            	errorMsg = "Http Error Code: 503. Method not Allowed";
+            	break;
+            }
         }
         errorPage.addObject("errorMsg", errorMsg);
         return errorPage;

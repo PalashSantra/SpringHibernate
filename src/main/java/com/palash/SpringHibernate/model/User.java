@@ -100,5 +100,10 @@ public class User {
 	public void setRole(String role) {
 		Role = role;
 	}
+	@Override
+	public String toString() {
+		return "User [UserID=" + UserID + ", FullName=" + FullName + ", Email=" + Email + ", UserName=" + UserName
+				+ ", Password=" + Password + ", IsActive=" + IsActive + ", Role=" + Role + "]";
+	}
 	
 }
