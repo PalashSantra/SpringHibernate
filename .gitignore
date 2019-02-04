@@ -29,3 +29,4 @@ hs_err_pid*
 /target/classes/com/palash/SpringHibernate/service/*
 /target/classes/com/palash/SpringHibernate/util/*
 /.settings/*
+/.idea/*

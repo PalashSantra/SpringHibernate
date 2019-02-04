@@ -16,17 +16,21 @@ public class AuthenticationManager {
 		UserSession us;
 		try {
 			us = (UserSession) session.getAttribute("jsession");
-			switch(us.getRoll()) {
-				case "admin":{
-					return true;
-				}
-				case "user":{
-					return true;
-				}
-				default:{
-					return false;
-				}
-			}
+			if(us.getRoll()=="admin" || us.getRoll()=="student")
+				return true;
+			else
+				return false;
+//			switch(us.getRoll()) {
+//				case "admin":{
+//					return true;
+//				}
+//				case "user":{
+//					return true;
+//				}
+//				default:{
+//					return false;
+//				}
+//			}
 		}
 		catch(Exception ex) {
 			return false;
