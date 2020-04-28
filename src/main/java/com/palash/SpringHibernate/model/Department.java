@@ -3,13 +3,7 @@ package com.palash.SpringHibernate.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -23,6 +17,8 @@ public class Department {
 	@Column(name = "DNo")
 	@GeneratedValue
 	private int DNo;
+	@Transient
+	private String EncryptedDno;
 	private String DName;
 	@OneToMany(mappedBy = "department",targetEntity = Student.class)
 	private List<Student> student = new ArrayList<Student>();
@@ -47,6 +43,12 @@ public class Department {
 	}
 	public String getDName() {
 		return DName;
+	}
+	public String getEncryptedDno() {
+		return EncryptedDno;
+	}
+	public void setEncryptedDno(String encryptedDno) {
+		EncryptedDno = encryptedDno;
 	}
 	public void setDName(String dName) {
 		DName = dName;

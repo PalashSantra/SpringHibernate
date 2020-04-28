@@ -33,6 +33,7 @@
 		<div class="row">
 			
 			<form:form cssClass="form-horizontal" method="post" action="${base_url}/department/service" modelAttribute="Department">
+				<input type="hidden" name="encrypted_dept_no" id="encrypted_dept_no" value="0">
 				<input type="hidden" name="dept_no" id="dept_no" value="0">
 				<input type="hidden" name="mode" id="mode" value="save">
 			  <div class="form-group">
@@ -65,6 +66,7 @@
 						<% sl_no+=1; %>
 						<tr>
 							<td><button class="btn btn-info edit">Edit</button>  <button class="btn btn-danger delete">Delete</button></td>
+							<td class="hidden encrypted_dno">${dept.getEncryptedDno()}</td>
 							<td><%=sl_no %></td>
 							<td class="dno">${dept.getDNo()}</td>
 							<td class="dname">${dept.getDName()}</td>
@@ -80,8 +82,10 @@
 	<script type="text/javascript">
 		$(function(){
 			$(".edit").click(function(){
+			    var encrypted_dept_no = $(this).parent().parent().find(".encrypted_dno").html();
 				var dno = $(this).parent().parent().find(".dno").html();
 				var dname = $(this).parent().parent().find(".dname").html();
+				$("#encrypted_dept_no").val(encrypted_dept_no);
 				$("#dept_no").val(dno);
 				$("#dept_name").val(dname);
 				$("#mode").val("update");

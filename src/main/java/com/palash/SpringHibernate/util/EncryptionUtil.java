@@ -21,7 +21,7 @@ public class EncryptionUtil {
 		
 	}
 
-	public static String encode(String input) {
+	public static String encode(String input){
 		if (input == null) {
 			throw new IllegalArgumentException();
 		}

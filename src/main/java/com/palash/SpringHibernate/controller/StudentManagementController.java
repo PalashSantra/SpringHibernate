@@ -41,11 +41,14 @@ public class StudentManagementController implements ServletContextAware {
 		List<Department> depts = sm_service.getAllDepartments(); 
 		ModelAndView mv = new ModelAndView("dept_info");
 		mv.addObject("base_url", base_url);
+		for (Department dept : depts) {
+			dept.setEncryptedDno(EncryptionUtil.encode(Integer.toString(dept.getDNo())));
+		}
 		mv.addObject("depts", depts);
 		return mv;
 	}
 	@RequestMapping("/department/service")
-	public ModelAndView saveDept(@RequestParam("dept_name") String dept_name,@RequestParam("dept_no") int dept_no,@RequestParam("mode") String mode) {
+	public ModelAndView saveDept(@RequestParam("dept_name") String dept_name,@RequestParam("encrypted_dept_no") String encrypted_dept_no,@RequestParam("mode") String mode) {
 		String base_url=this.servletContext.getInitParameter("base_url");
 		if(mode.equals("save")){
 			Department dept = new Department();
@@ -53,7 +56,7 @@ public class StudentManagementController implements ServletContextAware {
 			sm_service.addDepartment(dept);
 		}
 		else {
-			Department dept = sm_service.getDepartment(dept_no);
+			Department dept = sm_service.getDepartment(Integer.parseInt(EncryptionUtil.decode(encrypted_dept_no)));
 			dept.setDName(dept_name);
 		}
 		ModelAndView mv = new ModelAndView("redirect:"+base_url+"/department");
